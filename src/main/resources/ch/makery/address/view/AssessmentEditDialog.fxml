@@ -8,16 +8,26 @@
 <?import javafx.scene.layout.*?>
 
 
-<AnchorPane prefHeight="309.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.makery.address.view.SubjectEditDialog">
+<AnchorPane prefHeight="325.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.makery.address.view.AssessmentEditDialog">
    <children>
-      <GridPane layoutX="14.0" layoutY="88.0" prefHeight="115.0" prefWidth="580.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="70.0">
+      <GridPane layoutX="10.0" layoutY="53.0" prefHeight="193.0" prefWidth="560.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="60.0">
          <children>
-            <Label text="Subject Name">
+            <Label text="Final Exam">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label text="Subject Code" GridPane.rowIndex="1">
+            <Label text="Test" GridPane.rowIndex="1">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label text="Quiz" GridPane.rowIndex="2">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label text="Assignment" GridPane.rowIndex="3">
                <font>
                   <Font size="18.0" />
                </font>
@@ -32,6 +42,16 @@
                   <Font size="18.0" />
                </font>
             </TextField>
+            <TextField fx:id="streetField" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="cityField" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </TextField>
          </children>
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="282.0" minWidth="10.0" prefWidth="179.0" />
@@ -40,14 +60,11 @@
          <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
       </GridPane>
-      <Label layoutX="14.0" layoutY="14.0" text="Subject Detail">
-         <font>
-            <Font name="System Bold" size="18.0" />
-         </font>
-      </Label>
-      <HBox layoutX="407.0" layoutY="180.0" spacing="10.0" AnchorPane.bottomAnchor="35.0" AnchorPane.rightAnchor="35.0">
+      <HBox layoutX="568.0" layoutY="341.0" spacing="10.0" AnchorPane.bottomAnchor="35.0" AnchorPane.rightAnchor="35.0">
          <children>
             <Button defaultButton="true" layoutX="407.0" layoutY="180.0" mnemonicParsing="false" prefWidth="52.0" text="OK">
                <font>
@@ -61,5 +78,10 @@
             </Button>
          </children>
       </HBox>
+      <Label layoutX="14.0" layoutY="21.0" text="Assessment Detail">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

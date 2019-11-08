@@ -1,15 +1,19 @@
 package ch.makery.address.model
 import ch.makery.address.model.Assessment
 import scalafx.beans.property.{IntegerProperty, StringProperty}
+import scalafx.collections.ObservableBuffer
 
 import scala.collection.mutable.ListBuffer
 
 class Subject ( subCodeS : String, subNameS : String) {
-  var subCode = new StringProperty(subCodeS)
-  var subName = new StringProperty(subNameS)
-  var assessments:ListBuffer[Assessment] = ListBuffer()
+  val subCode = new StringProperty(subCodeS)
+  val subName = new StringProperty(subNameS)
+  val assessments = new ObservableBuffer[Assessment]()
 
-  def createAssessment(name:String, weightage: Int, obtainedRaw: Int, totalRaw: Int) {
-    assessments.append(new Assessment(name, weightage, obtainedRaw, totalRaw))
+  assessments += new Assessment("assessment1",50,0,0)
+  assessments += new Assessment("assessment2",50,0,0)
+
+  def createAssessment(name:String, weightage: Int, obtainedRaw: Int, totalRaw: Int){
+    assessments += new Assessment(name, weightage, obtainedRaw, totalRaw)
   }
 }

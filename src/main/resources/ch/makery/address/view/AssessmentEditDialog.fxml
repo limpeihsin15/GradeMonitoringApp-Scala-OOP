@@ -7,55 +7,59 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane prefHeight="325.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.makery.address.view.AssessmentEditDialog">
+<AnchorPane prefHeight="325.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.makery.address.view.AssessmentEditController">
    <children>
       <GridPane layoutX="10.0" layoutY="53.0" prefHeight="193.0" prefWidth="560.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="60.0">
          <children>
-            <Label text="Final Exam">
+            <Label text="Name">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label text="Test" GridPane.rowIndex="1">
+            <Label text="Contributing Weightage" GridPane.rowIndex="1">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label text="Quiz" GridPane.rowIndex="2">
+            <Label text="Obtained Marks" GridPane.rowIndex="2">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label text="Assignment" GridPane.rowIndex="3">
+            <Label text="Total Obtainable Marks" GridPane.rowIndex="3">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <TextField fx:id="firstNameField" GridPane.columnIndex="1">
+            <TextField fx:id="assessmentNameField" GridPane.columnIndex="1">
                <font>
                   <Font size="18.0" />
                </font>
             </TextField>
-            <TextField fx:id="lastNameField" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <TextField fx:id="obtainedRawField" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <font>
                   <Font size="18.0" />
                </font>
             </TextField>
-            <TextField fx:id="streetField" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <TextField fx:id="totalRawField" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <font>
                   <Font size="18.0" />
                </font>
             </TextField>
-            <TextField fx:id="cityField" GridPane.columnIndex="1" GridPane.rowIndex="3">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </TextField>
+            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <TextField fx:id="weightageField" prefHeight="48.0" prefWidth="161.0" />
+                  <Label prefHeight="47.0" prefWidth="102.0" text="/100">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
          </children>
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="282.0" minWidth="10.0" prefWidth="179.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="401.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="282.0" minWidth="10.0" prefWidth="237.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="263.0" />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -66,12 +70,12 @@
       </GridPane>
       <HBox layoutX="568.0" layoutY="341.0" spacing="10.0" AnchorPane.bottomAnchor="35.0" AnchorPane.rightAnchor="35.0">
          <children>
-            <Button defaultButton="true" layoutX="407.0" layoutY="180.0" mnemonicParsing="false" prefWidth="52.0" text="OK">
+            <Button defaultButton="true" layoutX="407.0" layoutY="180.0" mnemonicParsing="false" onAction="#handleOk" prefWidth="52.0" text="OK">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button cancelButton="true" layoutX="470.0" layoutY="180.0" mnemonicParsing="false" text="Cancel">
+            <Button cancelButton="true" layoutX="470.0" layoutY="180.0" mnemonicParsing="false" onAction="#handleCancel" text="Cancel">
                <font>
                   <Font size="14.0" />
                </font>

@@ -1,28 +1,28 @@
 package ch.makery.address.view
 
-import ch.makery.address.model.{Assessment, Person, Subject}
+import ch.makery.address.model.{Assessment,  Subject}
 import ch.makery.address.MainApp
 import scalafx.scene.control.{Alert, Label, TableColumn, TableView}
 import scalafxml.core.macros.sfxml
-import scalafx.beans.property.StringProperty
+import scalafx.beans.property.{DoubleProperty, ObjectProperty, StringProperty}
 import ch.makery.address.util.DateUtil._
 import scalafx.Includes._
 import scalafx.event.ActionEvent
 
 @sfxml
 class SubjectOverviewController(
-  
-    private val subjectTable : TableView[Subject],
-   
-    private val subCodeColumn : TableColumn[Subject, String],
-  
-    private val subNameColumn : TableColumn[Subject, String],
 
-    private val assessmentTable : TableView[Subject],
+                                 private val subjectTable : TableView[Subject],
 
-    private val assessmentNameColumn : TableColumn[Subject, String],
+                                 private val subCodeColumn : TableColumn[Subject, String],
 
-    private val assessmentMarksColumn : TableColumn[Subject, Double],
+                                 private val subNameColumn : TableColumn[Subject, String],
+
+                                 private val assessmentTable : TableView[Assessment],
+
+                                 private val assessmentNameColumn : TableColumn[Assessment, String],
+
+                                 private val assessmentMarksColumn : TableColumn[Assessment, String],
 
     ) {
   // initialize Table View display contents model
@@ -31,11 +31,6 @@ class SubjectOverviewController(
   subCodeColumn.cellValueFactory = {_.value.subCode}
   subNameColumn.cellValueFactory  = {_.value.subName}
 
-  // initialize Table View display contents model
-  subjectTable.items = MainApp.subjectAssessmentData
-  // initialize columns's cell values
-  assessmentNameColumn.cellValueFactory = {_.value.subCode}
-  assessmentMarksColumn.cellValueFactory  = {_.value.subName}
 
   showSubjectDetails(None);
   
@@ -46,29 +41,28 @@ class SubjectOverviewController(
   private def showSubjectDetails (subject : Option[Subject]) = {
     subject match {
       case Some(subject) =>
+        assessmentTable.items = subject.assessments
       // Fill the labels with info from the subject object.
-        for (i <- subject.assessments) {
-          assessmentNameColumn.text = i.name()
-          assessmentMarksColumn.text = i.calcWeightage.toString
+        for (i <- 0 until subject.assessments.length) {
+          assessmentNameColumn.cellValueFactory = {_.value.name}
+          assessmentMarksColumn.cellValueFactory = {_.value.obtainedWeightage}
         }
 
       case None =>
         // Person is null, remove all the text.
-      firstNameLabel.text = ""
-      lastNameLabel.text  = ""
-      streetLabel.text    = ""
-      postalCodeLabel.text= ""
-      cityLabel.text      = ""
-      birthdayLabel.text  = ""
+        assessmentNameColumn.text = ""
+        assessmentMarksColumn.text  = ""
     }    
   }
-  def handleNewPerson(action : ActionEvent) = {
-    val person = new Person("","")
-    val okClicked = MainApp.showPersonEditDialog(person);
+
+  def handleNewSubject(action : ActionEvent) = {
+    val subject = new Subject("","")
+    val okClicked = MainApp.showSubjectEditDialog(subject);
         if (okClicked) {
-            MainApp.personData += person
+            MainApp.subjectData += subject
         }
   }
+  /*
   def handleEditPerson(action : ActionEvent) = {
     val selectedPerson = personTable.selectionModel().selectedItem.value
     if (selectedPerson != null) {
@@ -92,5 +86,5 @@ class SubjectOverviewController(
           personTable.items().remove(selectedIndex);
       } 
    } 
-  
+  */
 }

@@ -8,7 +8,7 @@ import scalafxml.core.{FXMLLoader, FXMLView, NoDependencyResolver}
 import javafx.{scene => jfxs}
 import scalafx.collections.ObservableBuffer
 import ch.makery.address.model.{Assessment, Subject}
-import ch.makery.address.view.PersonEditDialogController
+import ch.makery.address.view.SubjectEditDialogController
 import scalafx.stage.{Modality, Stage}
 
 object MainApp extends JFXApp {
@@ -19,9 +19,8 @@ object MainApp extends JFXApp {
     subjectData += new Subject("CSC3024", "Human Computer Interaction")
     subjectData += new Subject("MKT2224", "Marketing Principles")
     subjectData += new Subject("NET2201", "Computer Networks")
-  
-  val subjectAssessmentData = new ObservableBuffer[Assessment]()
-    subjectAssessmentData += new Assessment("Mid Term test", 20, 0, 0)
+
+
   // transform path of RootLayout.fxml to URI for resource location.
   val rootResource = getClass.getResourceAsStream("view/RootLayout.fxml")
   // initialize the loader object.
@@ -45,7 +44,7 @@ object MainApp extends JFXApp {
     val roots = loader.getRoot[jfxs.layout.AnchorPane]
     this.roots.setCenter(roots)
   } 
-  
+
    def showSubjectEditDialog(subject: Subject): Boolean = {
     val resource = getClass.getResourceAsStream("view/SubjectEditDialog.fxml")
     val loader = new FXMLLoader(null, NoDependencyResolver)
@@ -54,7 +53,7 @@ object MainApp extends JFXApp {
     val control = loader.getController[SubjectEditDialogController#Controller]
 
     val dialog = new Stage() {
-      initModality(Modality.APPLICATION_MODAL)
+      initModality(Modality.ApplicationModal)
       initOwner(stage)
       scene = new Scene {
         root = roots2
@@ -64,7 +63,7 @@ object MainApp extends JFXApp {
     control.subject = subject
     dialog.showAndWait()
     control.okClicked
-  } 
+  }
   // call to display PersonOverview when app start
   showSubjectOverview()
 }

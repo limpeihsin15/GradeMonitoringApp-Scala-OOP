@@ -36,7 +36,6 @@ class SubjectEditDialogController (
         _subject.subName <== subNameField.text
         _subject.subCode  <== subCodeField.text
 
-
         okClicked = true;
         dialogStage.close()
     }

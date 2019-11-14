@@ -19,8 +19,8 @@ class AssessmentEditDialogController (
 
                                  ){
   var         dialogStage : Stage  = null
-  private var _assessment     : Assessment = null
-  var         okClicked            = false
+  private var _assessment : Assessment = null
+  var         okClicked           = false
 
   def assessment = _assessment
   def assessment_=(x : Assessment) {
@@ -40,8 +40,14 @@ class AssessmentEditDialogController (
       _assessment.obtainedRaw <== Integer.parseInt(obtainedRawField.getText())
       _assessment.totalRaw <== Integer.parseInt(totalRawField.getText())
 
+
+      _assessment.obtainedWeightage <== _assessment.calcWeightage(_assessment.obtainedRaw,_assessment.totalRaw,_assessment.weightage)
+
       okClicked = true;
+
+
       dialogStage.close()
+
     }
   }
 
@@ -93,3 +99,24 @@ class AssessmentEditDialogController (
     }
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

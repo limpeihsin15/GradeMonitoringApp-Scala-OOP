@@ -8,7 +8,8 @@ import scalafxml.core.{FXMLLoader, FXMLView, NoDependencyResolver}
 import javafx.{scene => jfxs}
 import scalafx.collections.ObservableBuffer
 import ch.makery.address.model.{Assessment, Subject}
-import ch.makery.address.view.SubjectEditDialogController
+import ch.makery.address.view.{AssessmentEditDialogController, SubjectEditDialogController}
+import scalafx.scene.control.Alert
 import scalafx.stage.{Modality, Stage}
 
 object MainApp extends JFXApp {
@@ -43,17 +44,17 @@ object MainApp extends JFXApp {
     loader.load(resource);
     val roots = loader.getRoot[jfxs.layout.AnchorPane]
     this.roots.setCenter(roots)
-  } 
+  }
 
    def showSubjectEditDialog(subject: Subject): Boolean = {
     val resource = getClass.getResourceAsStream("view/SubjectEditDialog.fxml")
     val loader = new FXMLLoader(null, NoDependencyResolver)
-    loader.load(resource);
+    loader.load(resource);//
     val roots2  = loader.getRoot[jfxs.Parent]
     val control = loader.getController[SubjectEditDialogController#Controller]
 
     val dialog = new Stage() {
-      initModality(Modality.ApplicationModal)
+      initModality(Modality.APPLICATION_MODAL)
       initOwner(stage)
       scene = new Scene {
         root = roots2
@@ -61,6 +62,25 @@ object MainApp extends JFXApp {
     }
     control.dialogStage = dialog
     control.subject = subject
+    dialog.showAndWait()
+    control.okClicked
+  }
+  def showAssessmentEditDialog(assessment: Assessment): Boolean = {
+    val resource = getClass.getResourceAsStream("view/AssessmentEditDialog.fxml")
+    val loader = new FXMLLoader(null, NoDependencyResolver)
+    loader.load(resource);
+    val roots2  = loader.getRoot[jfxs.Parent]
+    val control = loader.getController[AssessmentEditDialogController#Controller]
+
+    val dialog = new Stage() {
+      initModality(Modality.APPLICATION_MODAL)
+      initOwner(stage)
+      scene = new Scene {
+        root = roots2
+      }
+    }
+    control.dialogStage = dialog
+    control.assessment = assessment
     dialog.showAndWait()
     control.okClicked
   }

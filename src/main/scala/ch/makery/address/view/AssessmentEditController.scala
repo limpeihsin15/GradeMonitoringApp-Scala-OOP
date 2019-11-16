@@ -1,12 +1,13 @@
 package ch.makery.address.view
 
-import ch.makery.address.model.{Assessment}
+import ch.makery.address.model.Assessment
 import ch.makery.address.MainApp
 import scalafx.scene.control.{Alert, Label, TableColumn, TextField}
 import scalafxml.core.macros.sfxml
 import scalafx.stage.Stage
 import scalafx.Includes._
 import ch.makery.address.util.DateUtil._
+import scalafx.beans.property.ObjectProperty
 import scalafx.event.ActionEvent
 
 @sfxml
@@ -36,7 +37,7 @@ class AssessmentEditDialogController (
 
     if (isInputValid()) {
       _assessment.name <== assessmentNameField.text
-      _assessment.weightage  <== Integer.parseInt(weightageField.getText())
+      _assessment.weightage  <== ObjectProperty(Integer.parseInt(weightageField.getText()))
       _assessment.obtainedRaw <== Integer.parseInt(obtainedRawField.getText())
       _assessment.totalRaw <== Integer.parseInt(totalRawField.getText())
 
@@ -81,6 +82,7 @@ class AssessmentEditDialogController (
         case e : NumberFormatException =>
           errorMessage += "No valid total obtainable marks (must be an integer)!\n"
       }
+
     }
 
 

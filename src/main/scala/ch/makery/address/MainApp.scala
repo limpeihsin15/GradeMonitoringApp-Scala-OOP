@@ -7,12 +7,17 @@ import scalafx.Includes._
 import scalafxml.core.{FXMLLoader, FXMLView, NoDependencyResolver}
 import javafx.{scene => jfxs}
 import scalafx.collections.ObservableBuffer
-import ch.makery.address.model.{Assessment, Subject}
+import ch.makery.address.model.{Assessment, Student, Subject}
+import ch.makery.address.util.{Calculate, DateUtil}
 import ch.makery.address.view.{AssessmentEditDialogController, SubjectEditDialogController}
 import scalafx.scene.control.Alert
+import scalafx.scene.image.Image
 import scalafx.stage.{Modality, Stage}
 
 object MainApp extends JFXApp {
+
+
+
   // the data as an observable list of Persons
   val subjectData = new ObservableBuffer[Subject]()
     subjectData += new Subject("PRG2104", "Object-Oriented Programming")
@@ -20,6 +25,8 @@ object MainApp extends JFXApp {
     subjectData += new Subject("CSC3024", "Human Computer Interaction")
     subjectData += new Subject("MKT2224", "Marketing Principles")
     subjectData += new Subject("NET2201", "Computer Networks")
+  val person1 = new Student("chun","tan", 123,"soit","august",subjectData)
+
 
 
   // transform path of RootLayout.fxml to URI for resource location.
@@ -33,8 +40,9 @@ object MainApp extends JFXApp {
   // initialize stage
   stage = new PrimaryStage {
     title = "AddressApp"
-    scene = new Scene {
+    scene = new Scene (width= 1300, height = 700) {
       root = roots
+      stylesheets = List(getClass.getResource("view/GradeMonitoring.css").toExternalForm)
     }
   }
   // actions for display person overview window 
@@ -58,6 +66,7 @@ object MainApp extends JFXApp {
       initOwner(stage)
       scene = new Scene {
         root = roots2
+        stylesheets = List(getClass.getResource("view/GradeMonitoring.css").toExternalForm)
       }
     }
     control.dialogStage = dialog
@@ -77,6 +86,7 @@ object MainApp extends JFXApp {
       initOwner(stage)
       scene = new Scene {
         root = roots2
+        stylesheets = List(getClass.getResource("view/GradeMonitoring.css").toExternalForm)
       }
     }
     control.dialogStage = dialog

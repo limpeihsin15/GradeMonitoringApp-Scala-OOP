@@ -7,26 +7,26 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="325.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.makery.address.view.AssessmentEditDialogController">
+<AnchorPane prefHeight="325.0" prefWidth="600.0" stylesheets="@GradeMonitoring.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.makery.address.view.AssessmentEditDialogController">
    <children>
       <GridPane layoutX="10.0" layoutY="53.0" prefHeight="193.0" prefWidth="560.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="60.0">
          <children>
-            <Label text="Name">
+            <Label styleClass="label-grid" stylesheets="@GradeMonitoring.css" text="Name">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label text="Contributing Weightage" GridPane.rowIndex="1">
+            <Label styleClass="label-grid" text="Contributing Weightage" GridPane.rowIndex="1">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label text="Obtained Marks" GridPane.rowIndex="2">
+            <Label styleClass="label-grid" text="Obtained Marks" GridPane.rowIndex="2">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label text="Total Obtainable Marks" GridPane.rowIndex="3">
+            <Label styleClass="label-grid" text="Total Obtainable Marks" GridPane.rowIndex="3">
                <font>
                   <Font size="18.0" />
                </font>
@@ -48,8 +48,11 @@
             </TextField>
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <TextField fx:id="weightageField" prefHeight="48.0" prefWidth="161.0" />
-                  <Label prefHeight="47.0" prefWidth="102.0" text="/100">
+                  <TextField fx:id="weightageField" prefHeight="48.0" prefWidth="161.0">
+                     <font>
+                        <Font size="18.0" />
+                     </font></TextField>
+                  <Label prefHeight="47.0" prefWidth="102.0" styleClass="label-grid" text="/100">
                      <font>
                         <Font size="24.0" />
                      </font>
@@ -82,7 +85,7 @@
             </Button>
          </children>
       </HBox>
-      <Label layoutX="14.0" layoutY="21.0" text="Assessment Detail">
+      <Label layoutX="14.0" layoutY="12.0" styleClass="label-header" text="Assessment Detail">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>

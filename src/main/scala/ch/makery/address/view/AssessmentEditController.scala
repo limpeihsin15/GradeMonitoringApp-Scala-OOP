@@ -2,30 +2,23 @@ package ch.makery.address.view
 
 import ch.makery.address.model.Assessment
 import ch.makery.address.MainApp
-import scalafx.scene.control._
+import scalafx.scene.control.{Alert, Label, TableColumn, TextField}
 import scalafxml.core.macros.sfxml
 import scalafx.stage.Stage
 import scalafx.Includes._
 import ch.makery.address.util.DateUtil._
-import javafx.collections.ObservableList
 import scalafx.beans.property.ObjectProperty
-import scalafx.collections.ObservableBuffer
 import scalafx.event.ActionEvent
-import scalafx.scene.control.ComboBox
-
 
 @sfxml
 class AssessmentEditDialogController (
 
-                                     //private val comboboxType : ComboBox[String],
-                                   private val  assessmentNameField : TextField,
-                                   private val   weightageField : TextField,
-                                   private val   obtainedRawField : TextField,
-                                   private val   totalRawField : TextField,
+                                       private val  assessmentNameField : TextField,
+                                       private val   weightageField : TextField,
+                                       private val   obtainedRawField : TextField,
+                                       private val   totalRawField : TextField,
 
-
-
-                                 ){
+                                     ){
   var         dialogStage : Stage  = null
   private var _assessment : Assessment = null
   var         okClicked           = false
@@ -38,7 +31,6 @@ class AssessmentEditDialogController (
     weightageField.text  = _assessment.weightage.value.toString
     obtainedRawField.text = _assessment.obtainedRaw.value.toString
     totalRawField.text = _assessment.totalRaw.value.toString
-
   }
 
   def handleOk(action :ActionEvent){
@@ -48,10 +40,13 @@ class AssessmentEditDialogController (
       _assessment.weightage  <== ObjectProperty(Integer.parseInt(weightageField.getText()))
       _assessment.obtainedRaw <== Integer.parseInt(obtainedRawField.getText())
       _assessment.totalRaw <== Integer.parseInt(totalRawField.getText())
+
+
       _assessment.obtainedWeightage <== _assessment.calcWeightage(_assessment.obtainedRaw,_assessment.totalRaw,_assessment.weightage)
 
-
       okClicked = true;
+
+
       dialogStage.close()
 
     }

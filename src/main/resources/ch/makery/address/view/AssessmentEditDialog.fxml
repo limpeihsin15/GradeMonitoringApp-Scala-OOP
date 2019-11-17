@@ -7,9 +7,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="403.0" prefWidth="615.0" stylesheets="@GradeMonitoring.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.makery.address.view.AssessmentEditDialogController">
+<AnchorPane prefHeight="325.0" prefWidth="600.0" stylesheets="@GradeMonitoring.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.makery.address.view.AssessmentEditDialogController">
    <children>
-      <GridPane layoutX="26.0" layoutY="76.0" prefHeight="212.0" prefWidth="549.0" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="76.0">
+      <GridPane layoutX="10.0" layoutY="53.0" prefHeight="193.0" prefWidth="560.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="60.0">
          <children>
             <Label styleClass="label-grid" stylesheets="@GradeMonitoring.css" text="Name">
                <font>
@@ -41,7 +41,7 @@
                   <Font size="18.0" />
                </font>
             </TextField>
-            <TextField fx:id="totalRawField" prefHeight="49.0" prefWidth="294.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <TextField fx:id="totalRawField" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <font>
                   <Font size="18.0" />
                </font>
@@ -73,7 +73,7 @@
       </GridPane>
       <HBox layoutX="568.0" layoutY="341.0" spacing="10.0" AnchorPane.bottomAnchor="35.0" AnchorPane.rightAnchor="35.0">
          <children>
-            <Button defaultButton="true" layoutX="407.0" layoutY="180.0" mnemonicParsing="false" onAction="#handleOk" prefHeight="33.0" prefWidth="69.0" text="OK">
+            <Button defaultButton="true" layoutX="407.0" layoutY="180.0" mnemonicParsing="false" onAction="#handleOk" prefWidth="52.0" text="OK">
                <font>
                   <Font size="14.0" />
                </font>
@@ -85,7 +85,7 @@
             </Button>
          </children>
       </HBox>
-      <Label layoutX="14.0" layoutY="14.0" styleClass="label-header" text="Assessment Detail">
+      <Label layoutX="14.0" layoutY="12.0" styleClass="label-header" text="Assessment Detail">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>

@@ -19,7 +19,7 @@ object Calculate {
     subject.currentmarks = roundAt2(subject.currentmarks)
     subject.currentmarks
   }
-//##
+  //##
   def calcCGPA(student: Student): Double = {
     var _accumulatedmarks = 0.0
     var totalcredit = 0
@@ -31,6 +31,6 @@ object Calculate {
       //println(totalcredit)
     }
     student.cgpa = roundAt2(_accumulatedmarks / totalcredit)
-  student.cgpa
+    student.cgpa
   }
 }

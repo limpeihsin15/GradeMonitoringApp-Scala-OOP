@@ -1,17 +1,18 @@
 package ch.makery.address.view
 
-import ch.makery.address.model._
+import ch.makery.address.model.{Assessment, Assignment, Student, Subject}
 import ch.makery.address.MainApp
 import ch.makery.address.MainApp.{person1, subjectData}
 import ch.makery.address.util.Calculate
-import scalafx.scene.control._
+import scalafx.scene.control.{Alert, Label, TableColumn, TableView}
 import scalafxml.core.macros.sfxml
 import scalafx.beans.property.{DoubleProperty, ObjectProperty, StringProperty}
 import ch.makery.address.util.DateUtil._
 import scalafx.Includes._
-import scalafx.collections.ObservableBuffer
 import scalafx.event.ActionEvent
 import scalafx.stage.Stage
+
+import scala.util.{Try, Failure, Success}
 
 @sfxml
 class SubjectOverviewController(
@@ -26,21 +27,20 @@ class SubjectOverviewController(
                                  private val assessmentMarksColumn : TableColumn[Assessment, String],
                                  private val assessmentWeightageColumn : TableColumn[Assessment, Int],
 
+
                                  private var studentNameLabel : Label,
                                  private val studentIdLabel: Label,
                                  private val programmeLabel: Label,
                                  private val intakeLabel: Label,
                                  private val cgpaLabel: Label,
 
+
                                  private var currentPercentageLabel : Label,
                                  private val ExpectedPercentageLabel: Label,
-                                 private val difference: Label,
-
-                                 private var comboboxType : ComboBox[String],
+                                 private val difference: Label
 
 
-
-    ) {
+                               ) {
   // initialize Table View display contents model
   subjectTable.items = MainApp.person1.subject
   // initialize columns's cell values
@@ -54,17 +54,11 @@ class SubjectOverviewController(
   cgpaLabel.text = Calculate.calcCGPA(MainApp.person1).toString
 
 
-  comboboxType += "Final Exam"
-  comboboxType += "Assignment"
-  comboboxType += "Test"
-  comboboxType += "Quiz"
+  // showSubjectDetails(None);   //reason why table label wont show
 
-
-   // showSubjectDetails(None);   //reason why table label wont show
-
-    subjectTable.selectionModel().selectedItem.onChange(
-      (_, _, newValue) => showSubjectDetails(Some(newValue))
-    )
+  subjectTable.selectionModel().selectedItem.onChange(
+    (_, _, newValue) => showSubjectDetails(Some(newValue))
+  )
 
 
 
@@ -74,7 +68,7 @@ class SubjectOverviewController(
       case Some(subject) =>
         assessmentTable.items = subject.assessments
         //currentPercentageLabel.text = subject.totalmark.value.toString
-      // Fill the labels with info from the subject object.
+        // Fill the labels with info from the subject object.
         for (i <- 0 until subject.assessments.length) {
           assessmentNameColumn.cellValueFactory = {_.value.name}
           assessmentMarksColumn.cellValueFactory = {_.value.obtainedWeightage}
@@ -93,10 +87,10 @@ class SubjectOverviewController(
         currentPercentageLabel.text = ""
         ExpectedPercentageLabel.text = ""
         difference.text = ""
-    }    
+    }
   }
 
-  var         dialogStage : Stage  = null
+  var   dialogStage : Stage  = null
   implicit var assessment = new Assessment()
   def isValidWeightage(implicit assessment: Assessment):Boolean={
     var errorMessage = ""
@@ -121,65 +115,122 @@ class SubjectOverviewController(
       return false;
     }
   }
+
   //create new assessment in subject
   def handleNewAssessment(action : ActionEvent) = {
-
+    val assessment = new Assessment()
     if (subjectTable.selectionModel().selectedItem.value != null){
-      if(comboboxType.selectionModel().getSelectedIndex != -1 ) {
-        val assessment = createAssessment(comboboxType.selectionModel().getSelectedIndex)
-        val okClicked = MainApp.showAssessmentEditDialog(assessment);
-        if (okClicked) {
-          if (isValidWeightage(assessment)) {
-            subjectTable.selectionModel().selectedItem.value.assessments += assessment
-            Calculate.calcCGPA(MainApp.person1)
-            showSubjectDetails(Some(subjectTable.selectionModel().selectedItem.value))
-          }}}else {
-          displayErrorMessage("Type")}
-      }else{displayErrorMessage("Subject")
-  }}
-
-  def createAssessment(i: Int): Assessment = {
-    i match{
-       case 0 =>
-        return new FinalExam()
-       case 1 =>
-         return new Assignment()
-       case 2 =>
-         return new Test()
-       case 3 =>
-         return new Quiz()
+      
+      val okClicked = MainApp.showAssessmentEditDialog(assessment);
+      if (isValidWeightage(assessment)) {
+        if(okClicked){
+          assessment.saveAssessment() match {
+            case Success(x) =>
+              subjectTable.selectionModel().selectedItem.value.assessments += assessment
+              Calculate.calcCGPA(MainApp.person1)
+              showSubjectDetails(Some(subjectTable.selectionModel().selectedItem.value))
+            case Failure(e) =>
+              val alert = new Alert(Alert.AlertType.Warning) {
+                initOwner(MainApp.stage)
+                title = "Failed to Save"
+                headerText = "Database Error"
+                contentText = "Database problem filed to save changes"
+              }.showAndWait()
+        }}
+      }
     }
+
+    else {
+      // Nothing selected.
+      val alert = new Alert(Alert.AlertType.Warning){
+        initOwner(MainApp.stage)
+        title       = "No Selection"
+        headerText  = "No Assessment Selected"
+        contentText = "Please select a subject in the table."
+      }.showAndWait()
+    }
+
+
   }
+
   //edit assessment
   def handleEditAssessment(action : ActionEvent) = {
     val selectedAssessment = assessmentTable.selectionModel().selectedItem.value
     if (selectedAssessment != null) {
       val okClicked = MainApp.showAssessmentEditDialog(selectedAssessment) // when the button is clicked
       if(isValidWeightage){
-        if (okClicked) showSubjectDetails(Some(subjectTable.selectionModel().selectedItem.value))}
-    } else {
+        if (okClicked) {
+          selectedAssessment.saveAssessment()  match{
+            case Success(x) =>
+              showSubjectDetails(Some(subjectTable.selectionModel().selectedItem.value))
+            case Failure(e) =>
+              val alert = new Alert(Alert.AlertType.Warning) {
+                initOwner(MainApp.stage)
+                title = "Failed to Save"
+                headerText = "Database Error"
+                contentText = "Database problem failed to save changes"
+              }.showAndWait()
+          } //end of match
+        }//end of if statement
+        }//end of if statement
+      }
+
+     else {
       // Nothing selected.
-      displayErrorMessage("Assessment")
-    }
-  }
-  //delete assessment
-  def handleDeleteAssessment(action : ActionEvent) = {
-    val selectedIndex = assessmentTable.selectionModel().selectedIndex.value
-    if (selectedIndex >= 0) {
-      assessmentTable.items().remove(selectedIndex);
-      showSubjectDetails(Some(subjectTable.selectionModel().selectedItem.value))
-    } else {
-      // Nothing selected.
-      displayErrorMessage("Assessment")
+      val alert = new Alert(Alert.AlertType.Warning){
+        initOwner(MainApp.stage)
+        title       = "No Selection"
+        headerText  = "No Assessment Selected"
+        contentText = "Please select a subject in the table."
+      }.showAndWait()
     }
   }
 
+  //delete assessment
+  def handleDeleteAssessment(action : ActionEvent) = {
+    val selectedIndex = assessmentTable.selectionModel().selectedIndex.value
+    val selectedAssessment = assessmentTable.selectionModel().selectedItem.value
+    if (selectedIndex >= 0) {
+      selectedAssessment.deleteAssessment() match{
+        case Success(x) =>
+          assessmentTable.items().remove(selectedIndex);
+          showSubjectDetails(Some(subjectTable.selectionModel().selectedItem.value))
+        case Failure(e) =>
+          val alert = new Alert(Alert.AlertType.Warning) {
+            initOwner(MainApp.stage)
+            title = "Failed to Delete"
+            headerText = "Database Error"
+            contentText = "Database problem failed to delete"
+          }.showAndWait()
+    }}
+  else {
+      // Nothing selected.
+      val alert = new Alert(Alert.AlertType.Warning){
+        initOwner(MainApp.stage)
+        title       = "No Selection"
+        headerText  = "No Assessment Selected"
+        contentText = "Please select a subject in the table."
+      }.showAndWait()
+    }}
+
+
   def handleNewSubject(action : ActionEvent) = {
-    val subject = new Subject("","",creditS= 0)
-    val okClicked = MainApp.showSubjectEditDialog(subject);  //
-        if (okClicked) {
-            MainApp.subjectData += subject
-        }
+    val subject = new Subject("", "")
+    val okClicked = MainApp.showSubjectEditDialog(subject); //
+    if (okClicked) {
+      subject.saveSubject() match {
+        case Success(x) =>
+          MainApp.subjectData += subject
+        case Failure(e) =>
+          val alert = new Alert(Alert.AlertType.Warning) {
+            initOwner(MainApp.stage)
+            title = "Failed to Save"
+            headerText = "Database Error"
+            contentText = "Database problem failed to save changes"
+          }.showAndWait()
+      }
+
+    }
   }
 
 
@@ -188,29 +239,55 @@ class SubjectOverviewController(
     if (selectedSubject != null) {
       val okClicked = MainApp.showSubjectEditDialog(selectedSubject)
 
-      if (okClicked) showSubjectDetails(Some(selectedSubject))
-
+      if (okClicked)  {
+        showSubjectDetails(Some(selectedSubject))
+      selectedSubject.saveSubject() match {
+        case Success(x) =>
+          showSubjectDetails(Some(selectedSubject))
+        case Failure(e) =>
+          val alert = new Alert(Alert.AlertType.Warning) {
+            initOwner(MainApp.stage)
+            title = "Failed to Save"
+            headerText = "Database Error"
+            contentText = "Database problem failed to save changes"
+          }.showAndWait()
+      }
     } else {
       // Nothing selected.
-      displayErrorMessage("Subject")
+      val alert = new Alert(Alert.AlertType.Warning){
+        initOwner(MainApp.stage)
+        title       = "No Selection"
+        headerText  = "No Subject Selected"
+        contentText = "Please select a subject in the table."
+      }.showAndWait()
+    }
+  }}
+
+  def handleDeleteSubject(action : ActionEvent) = {
+    val selectedIndex = subjectTable.selectionModel().selectedIndex.value
+    val selectedSubject = subjectTable.selectionModel().selectedItem.value
+    if (selectedIndex >= 0) {
+      selectedSubject.deleteSubject() match{
+      case Success(x) =>
+        subjectTable.items().remove(selectedIndex);
+      case Failure(x) =>
+        val alert = new Alert(Alert.AlertType.Warning) {
+          initOwner(MainApp.stage)
+          title = "Failed to Delete"
+          headerText = "Database Error"
+          contentText = "Database problem failed to delete"
+        }.showAndWait()
+    }
+    } else {
+      // Nothing selected.
+      val alert = new Alert(Alert.AlertType.Warning){
+        initOwner(MainApp.stage)
+        title       = "No Selection"
+        headerText  = "No Subject Selected"
+        contentText = "Please select a subject in the table."
+      }.showAndWait()
     }
   }
 
-  def handleDeleteSubject(action : ActionEvent) = {
-      val selectedIndex = subjectTable.selectionModel().selectedIndex.value
-      if (selectedIndex >= 0) {
-          subjectTable.items().remove(selectedIndex);} else {
-        displayErrorMessage("Subject")
-  }
+
 }
-def displayErrorMessage(s:String): Unit ={
-  // Nothing selected.
-  val alert = new Alert(Alert.AlertType.Warning){
-    initOwner(MainApp.stage)
-    title       = "No Selection"
-    headerText  = "No "+ s +" Selected"
-    contentText = "Please select a "+ s +" in the table."
-  }.showAndWait()
-}}
-
-

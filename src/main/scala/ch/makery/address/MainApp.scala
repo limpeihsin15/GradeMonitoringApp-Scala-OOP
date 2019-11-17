@@ -7,8 +7,8 @@ import scalafx.Includes._
 import scalafxml.core.{FXMLLoader, FXMLView, NoDependencyResolver}
 import javafx.{scene => jfxs}
 import scalafx.collections.ObservableBuffer
-import ch.makery.address.model.{Assessment, Student, Subject}
-import ch.makery.address.util.{Calculate, DateUtil}
+import ch.makery.address.model.{Assessment, Person, Student, Subject}
+import ch.makery.address.util.{Calculate, Database, DateUtil}
 import ch.makery.address.view.{AssessmentEditDialogController, SubjectEditDialogController}
 import scalafx.scene.control.Alert
 import scalafx.scene.image.Image
@@ -16,14 +16,23 @@ import scalafx.stage.{Modality, Stage}
 
 object MainApp extends JFXApp {
 
-  // the data as an observable list of Persons
+  //initialize database
+  Database.setupDB()
+
+  // the data as an observable list of Subjects
   val subjectData = new ObservableBuffer[Subject]()
-    subjectData += new Subject("PRG2104", "Object-Oriented Programming",4)
-    subjectData += new Subject("SEG2202", "Software Engineering",4)
-    subjectData += new Subject("CSC3024", "Human Computer Interaction",4)
-    subjectData += new Subject("MKT2224", "Marketing Principles",4)
-    subjectData += new Subject("NET2201", "Computer Networks",4)
+
+  //assign all subject into subjectData array
+  subjectData ++= Subject.insertAssessmentIntoSubjects(Subject.getAllSubjects)
+
+    /*subjectData += new Subject("PRG2104", "Object-Oriented Programming")
+    subjectData += new Subject("SEG2202", "Software Engineering")
+    subjectData += new Subject("CSC3024", "Human Computer Interaction")
+    subjectData += new Subject("MKT2224", "Marketing Principles")
+    subjectData += new Subject("NET2201", "Computer Networks")*/
   val person1 = new Student("chun","tan", 123,"soit","august",subjectData)
+
+
 
   // transform path of RootLayout.fxml to URI for resource location.
   val rootResource = getClass.getResourceAsStream("view/RootLayout.fxml")
@@ -35,10 +44,11 @@ object MainApp extends JFXApp {
   val roots = loader.getRoot[jfxs.layout.BorderPane]
   // initialize stage
   stage = new PrimaryStage {
-    title = "AddressApp"
+    title = "Grade Monitoring App"
     scene = new Scene (width= 1300, height = 700) {
       root = roots
       stylesheets = List(getClass.getResource("view/GradeMonitoring.css").toExternalForm)
+      icons += new Image(getClass.getResourceAsStream("view/student.png"))
     }
   }
   // actions for display person overview window 
@@ -90,6 +100,6 @@ object MainApp extends JFXApp {
     dialog.showAndWait()
     control.okClicked
   }
-  // call to display PersonOverview when app start
+  // call to display SubjectOverview when app start
   showSubjectOverview()
 }

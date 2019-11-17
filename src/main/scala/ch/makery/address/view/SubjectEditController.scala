@@ -12,39 +12,37 @@ import scalafx.event.ActionEvent
 @sfxml
 class SubjectEditDialogController (
 
-    private val  subNameField : TextField,
-    private val   subCodeField : TextField,
-    private val creditField : TextField,
+                                    private val  subNameField : TextField,
+                                    private val   subCodeField : TextField,
 
 
-){
+                                  ){
   var         dialogStage : Stage  = null
   private var _subject     : Subject = null
   var         okClicked            = false
 
   def subject = _subject
   def subject_=(x : Subject) {
-        _subject = x
+    _subject = x
 
-        subNameField.text = _subject.subName.value
-        subCodeField.text  = _subject.subCode.value
-        creditField.text = _subject.credit.value.toString
+    subNameField.text = _subject.subName.value
+    subCodeField.text  = _subject.subCode.value
 
   }
 
   def handleOk(action :ActionEvent){
 
-     if (isInputValid()) {
-        _subject.subName <== subNameField.text
-        _subject.subCode  <== subCodeField.text
-       _subject.credit <==  Integer.parseInt(creditField.getText())
-        okClicked = true;
-        dialogStage.close()
+    if (isInputValid()) {
+      _subject.subName <== subNameField.text
+      _subject.subCode  <== subCodeField.text
+
+      okClicked = true;
+      dialogStage.close()
     }
   }
 
   def handleCancel(action :ActionEvent) {
-        dialogStage.close();
+    dialogStage.close();
   }
   def nullChecking (x : String) = x == null || x.length == 0
 
@@ -58,17 +56,17 @@ class SubjectEditDialogController (
 
 
     if (errorMessage.length() == 0) {
-        return true;
+      return true;
     } else {
-        // Show the error message.
-        val alert = new Alert(Alert.AlertType.Error){
-          initOwner(dialogStage)
-          title = "Invalid Fields"
-          headerText = "Please correct invalid fields"
-          contentText = errorMessage
-        }.showAndWait()
+      // Show the error message.
+      val alert = new Alert(Alert.AlertType.Error){
+        initOwner(dialogStage)
+        title = "Invalid Fields"
+        headerText = "Please correct invalid fields"
+        contentText = errorMessage
+      }.showAndWait()
 
-        return false;
+      return false;
     }
-   }
+  }
 }

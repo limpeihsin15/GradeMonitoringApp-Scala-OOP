@@ -6,12 +6,12 @@ import scalafx.collections.ObservableBuffer
 
 import scala.collection.mutable.ListBuffer
 
-class Subject ( subCodeS : String, subNameS : String) {
+class Subject ( subCodeS : String, subNameS : String, creditS: Integer) {
   val subCode = new StringProperty(subCodeS)
   val subName = new StringProperty(subNameS)
   val assessments = new ObservableBuffer[Assessment]()
   var expectedmarks = IntegerProperty(70) //subject expected total marks
-  val credit = IntegerProperty(4)
+  val credit = IntegerProperty(creditS)
 /*
   assessments += new Assessment("assessment1", 15, 85, 100)// default
   assessments += new Assessment("assessment2", 15, 70, 100)// default

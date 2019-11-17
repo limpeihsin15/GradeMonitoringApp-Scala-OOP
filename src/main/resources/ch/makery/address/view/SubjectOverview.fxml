@@ -126,36 +126,47 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="598.0" prefWidth="586.0">
                <children>
-                  <HBox layoutX="10.0" layoutY="555.0" spacing="20.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
-                     <children>
-                        <Button mnemonicParsing="false" onAction="#handleNewAssessment" prefWidth="170.0" text="Add Assessment">
-                           <font>
-                              <Font name="Century Gothic" size="14.0" />
-                           </font>
-                        </Button>
-                        <Button layoutX="118.0" layoutY="359.0" mnemonicParsing="false" onAction="#handleEditAssessment" prefWidth="170.0" text="Edit Assessment">
-                           <font>
-                              <Font name="Century Gothic" size="14.0" />
-                           </font>
-                        </Button>
-                        <Button layoutX="220.0" layoutY="359.0" mnemonicParsing="false" onAction="#handleDeleteAssessment" prefWidth="170.0" text="Delete Assessment">
-                           <font>
-                              <Font name="Century Gothic" size="14.0" />
-                           </font>
-                        </Button>
-                     </children>
-                  </HBox>
-                  <TableView fx:id="assessmentTable" layoutX="10.0" layoutY="166.0" prefHeight="360.0" prefWidth="452.0" AnchorPane.bottomAnchor="90.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="200.0">
+                  <TableView fx:id="assessmentTable" layoutX="10.0" layoutY="198.0" prefHeight="292.0" prefWidth="555.0" AnchorPane.bottomAnchor="108.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="198.0">
                     <columns>
                       <TableColumn fx:id="assessmentNameColumn" editable="false" minWidth="-1.0" prefWidth="225.0" text="Assessment Name" />
-                      <TableColumn fx:id="assessmentMarksColumn" editable="false" minWidth="-1.0" prefWidth="225.0" text="Assessment Marks" />
-                        <TableColumn fx:id="assessmentWeightageColumn" prefWidth="75.0" text="Assessment Weightage" />
+                      <TableColumn fx:id="assessmentMarksColumn" editable="false" minWidth="-1.0" prefWidth="181.0" text="Assessment Marks" />
+                        <TableColumn fx:id="assessmentWeightageColumn" prefWidth="186.0" text="Assessment Weightage" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
-                  <GridPane gridLinesVisible="true" layoutX="30.0" layoutY="20.0" prefHeight="114.0" prefWidth="411.0" styleClass="gridPane" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="60.0">
+                  <HBox layoutX="10.0" layoutY="555.0" spacing="20.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                     <children>
+                        <VBox prefHeight="0.0" prefWidth="170.0">
+                           <children>
+                              <ComboBox fx:id="comboboxType" prefHeight="33.0" prefWidth="170.0" promptText="Assessment Type" />
+                              <Button mnemonicParsing="false" onAction="#handleNewAssessment" prefHeight="33.0" prefWidth="170.0" text="Add Assessment">
+                                 <font>
+                                    <Font name="Century Gothic" size="14.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </VBox>
+                        <Button layoutX="189.0" layoutY="360.0" mnemonicParsing="false" onAction="#handleEditAssessment" prefWidth="170.0" text="Edit Assessment">
+                           <font>
+                              <Font name="Century Gothic" size="14.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets top="25.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button layoutX="220.0" layoutY="359.0" mnemonicParsing="false" onAction="#handleDeleteAssessment" prefWidth="170.0" text="Delete Assessment">
+                           <font>
+                              <Font name="Century Gothic" size="14.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets top="25.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <GridPane gridLinesVisible="true" layoutX="30.0" layoutY="38.0" prefHeight="114.0" prefWidth="516.0" styleClass="gridPane" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="29.0" AnchorPane.topAnchor="38.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

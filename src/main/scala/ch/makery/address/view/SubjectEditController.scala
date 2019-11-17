@@ -14,6 +14,7 @@ class SubjectEditDialogController (
 
     private val  subNameField : TextField,
     private val   subCodeField : TextField,
+    private val creditField : TextField,
 
 
 ){
@@ -27,6 +28,7 @@ class SubjectEditDialogController (
 
         subNameField.text = _subject.subName.value
         subCodeField.text  = _subject.subCode.value
+        creditField.text = _subject.credit.value.toString
 
   }
 
@@ -35,7 +37,7 @@ class SubjectEditDialogController (
      if (isInputValid()) {
         _subject.subName <== subNameField.text
         _subject.subCode  <== subCodeField.text
-
+       _subject.credit <==  Integer.parseInt(creditField.getText())
         okClicked = true;
         dialogStage.close()
     }

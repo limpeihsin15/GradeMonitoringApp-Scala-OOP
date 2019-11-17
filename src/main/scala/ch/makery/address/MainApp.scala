@@ -16,18 +16,14 @@ import scalafx.stage.{Modality, Stage}
 
 object MainApp extends JFXApp {
 
-
-
   // the data as an observable list of Persons
   val subjectData = new ObservableBuffer[Subject]()
-    subjectData += new Subject("PRG2104", "Object-Oriented Programming")
-    subjectData += new Subject("SEG2202", "Software Engineering")
-    subjectData += new Subject("CSC3024", "Human Computer Interaction")
-    subjectData += new Subject("MKT2224", "Marketing Principles")
-    subjectData += new Subject("NET2201", "Computer Networks")
+    subjectData += new Subject("PRG2104", "Object-Oriented Programming",4)
+    subjectData += new Subject("SEG2202", "Software Engineering",4)
+    subjectData += new Subject("CSC3024", "Human Computer Interaction",4)
+    subjectData += new Subject("MKT2224", "Marketing Principles",4)
+    subjectData += new Subject("NET2201", "Computer Networks",4)
   val person1 = new Student("chun","tan", 123,"soit","august",subjectData)
-
-
 
   // transform path of RootLayout.fxml to URI for resource location.
   val rootResource = getClass.getResourceAsStream("view/RootLayout.fxml")

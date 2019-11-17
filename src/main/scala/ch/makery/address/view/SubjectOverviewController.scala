@@ -1,14 +1,15 @@
 package ch.makery.address.view
 
-import ch.makery.address.model.{Assessment, Assignment, Subject}
+import ch.makery.address.model._
 import ch.makery.address.MainApp
 import ch.makery.address.MainApp.{person1, subjectData}
 import ch.makery.address.util.Calculate
-import scalafx.scene.control.{Alert, Label, TableColumn, TableView}
+import scalafx.scene.control._
 import scalafxml.core.macros.sfxml
 import scalafx.beans.property.{DoubleProperty, ObjectProperty, StringProperty}
 import ch.makery.address.util.DateUtil._
 import scalafx.Includes._
+import scalafx.collections.ObservableBuffer
 import scalafx.event.ActionEvent
 import scalafx.stage.Stage
 
@@ -33,7 +34,10 @@ class SubjectOverviewController(
 
                                  private var currentPercentageLabel : Label,
                                  private val ExpectedPercentageLabel: Label,
-                                 private val difference: Label
+                                 private val difference: Label,
+
+                                 private var comboboxType : ComboBox[String],
+
 
 
     ) {
@@ -48,6 +52,12 @@ class SubjectOverviewController(
   programmeLabel.text = MainApp.person1.programme.value
   intakeLabel.text = MainApp.person1.intake.value
   cgpaLabel.text = Calculate.calcCGPA(MainApp.person1).toString
+
+
+  comboboxType += "Final Exam"
+  comboboxType += "Assignment"
+  comboboxType += "Test"
+  comboboxType += "Quiz"
 
 
    // showSubjectDetails(None);   //reason why table label wont show
@@ -113,52 +123,45 @@ class SubjectOverviewController(
   }
   //create new assessment in subject
   def handleNewAssessment(action : ActionEvent) = {
-    val assessment = new Assessment()
+
     if (subjectTable.selectionModel().selectedItem.value != null){
-      val okClicked = MainApp.showAssessmentEditDialog(assessment);
-      if (isValidWeightage(assessment)) {
-        if(okClicked){
-          subjectTable.selectionModel().selectedItem.value.assessments += assessment
-          Calculate.calcCGPA(MainApp.person1)
-          showSubjectDetails(Some(subjectTable.selectionModel().selectedItem.value))
-        }
-      }
-    }
-    else {
-      // Nothing selected.
-      val alert = new Alert(Alert.AlertType.Warning){
-        initOwner(MainApp.stage)
-        title       = "No Selection"
-        headerText  = "No Assessment Selected"
-        contentText = "Please select a subject in the table."
-      }.showAndWait()
-    }
+      if(comboboxType.selectionModel().getSelectedIndex != -1 ) {
+        val assessment = createAssessment(comboboxType.selectionModel().getSelectedIndex)
+        val okClicked = MainApp.showAssessmentEditDialog(assessment);
+        if (okClicked) {
+          if (isValidWeightage(assessment)) {
+            subjectTable.selectionModel().selectedItem.value.assessments += assessment
+            Calculate.calcCGPA(MainApp.person1)
+            showSubjectDetails(Some(subjectTable.selectionModel().selectedItem.value))
+          }}}else {
+          displayErrorMessage("Type")}
+      }else{displayErrorMessage("Subject")
+  }}
 
-
+  def createAssessment(i: Int): Assessment = {
+    i match{
+       case 0 =>
+        return new FinalExam()
+       case 1 =>
+         return new Assignment()
+       case 2 =>
+         return new Test()
+       case 3 =>
+         return new Quiz()
+    }
   }
-
   //edit assessment
   def handleEditAssessment(action : ActionEvent) = {
     val selectedAssessment = assessmentTable.selectionModel().selectedItem.value
     if (selectedAssessment != null) {
       val okClicked = MainApp.showAssessmentEditDialog(selectedAssessment) // when the button is clicked
       if(isValidWeightage){
-        if (okClicked) showSubjectDetails(Some(subjectTable.selectionModel().selectedItem.value))
-
-
-      }
-
+        if (okClicked) showSubjectDetails(Some(subjectTable.selectionModel().selectedItem.value))}
     } else {
       // Nothing selected.
-      val alert = new Alert(Alert.AlertType.Warning){
-        initOwner(MainApp.stage)
-        title       = "No Selection"
-        headerText  = "No Assessment Selected"
-        contentText = "Please select a subject in the table."
-      }.showAndWait()
+      displayErrorMessage("Assessment")
     }
   }
-
   //delete assessment
   def handleDeleteAssessment(action : ActionEvent) = {
     val selectedIndex = assessmentTable.selectionModel().selectedIndex.value
@@ -167,17 +170,12 @@ class SubjectOverviewController(
       showSubjectDetails(Some(subjectTable.selectionModel().selectedItem.value))
     } else {
       // Nothing selected.
-      val alert = new Alert(Alert.AlertType.Warning){
-        initOwner(MainApp.stage)
-        title       = "No Selection"
-        headerText  = "No Assessment Selected"
-        contentText = "Please select a subject in the table."
-      }.showAndWait()
+      displayErrorMessage("Assessment")
     }
   }
 
   def handleNewSubject(action : ActionEvent) = {
-    val subject = new Subject("","")
+    val subject = new Subject("","",creditS= 0)
     val okClicked = MainApp.showSubjectEditDialog(subject);  //
         if (okClicked) {
             MainApp.subjectData += subject
@@ -194,29 +192,25 @@ class SubjectOverviewController(
 
     } else {
       // Nothing selected.
-      val alert = new Alert(Alert.AlertType.Warning){
-        initOwner(MainApp.stage)
-        title       = "No Selection"
-        headerText  = "No Subject Selected"
-        contentText = "Please select a subject in the table."
-      }.showAndWait()
+      displayErrorMessage("Subject")
     }
   }
 
   def handleDeleteSubject(action : ActionEvent) = {
       val selectedIndex = subjectTable.selectionModel().selectedIndex.value
       if (selectedIndex >= 0) {
-          subjectTable.items().remove(selectedIndex);
-
-      } else {
-    // Nothing selected.
-    val alert = new Alert(Alert.AlertType.Warning){
-      initOwner(MainApp.stage)
-      title       = "No Selection"
-      headerText  = "No Subject Selected"
-      contentText = "Please select a subject in the table."
-    }.showAndWait()
+          subjectTable.items().remove(selectedIndex);} else {
+        displayErrorMessage("Subject")
   }
+}
+def displayErrorMessage(s:String): Unit ={
+  // Nothing selected.
+  val alert = new Alert(Alert.AlertType.Warning){
+    initOwner(MainApp.stage)
+    title       = "No Selection"
+    headerText  = "No "+ s +" Selected"
+    contentText = "Please select a "+ s +" in the table."
+  }.showAndWait()
 }}
 
 

@@ -1,9 +1,12 @@
 package ch.makery.address.model
+import ch.makery.address.MainApp
 import ch.makery.address.model.Assessment
 import ch.makery.address.util.{Calculate, Database}
 import scalafx.beans.property.{IntegerProperty, StringProperty}
 import scalafx.collections.ObservableBuffer
+import scalafx.scene.control.Alert
 import scalikejdbc._
+import scala.util.control.Breaks._
 
 import scala.collection.TraversableOnce
 import scala.collection.mutable.ListBuffer
@@ -13,15 +16,12 @@ import scala.util.{Failure, Success, Try}
 class Subject (studentIdi: Int, subCodeS : String, subNameS : String, assessmentsOB: ObservableBuffer[Assessment], expectedmarksI:Int, creditI:Int) extends Database {
   def this() = this(0, null, null, null, 0, 0)
   def this(studentIdi: Int, subCodeS : String, subNameS : String, expectedmarksI:Int, creditI:Int) = this(0, subCodeS, subNameS, null, expectedmarksI, creditI)
-  def this(subCodeS : String, subNameS : String ) = {
-    this(0, subCodeS : String, subNameS : String, new ObservableBuffer[Assessment](), 70, 4)
+  def this(studentIdi: Int, subCodeS : String, subNameS : String ,creditI:Int) = {
+    this(studentIdi, subCodeS, subNameS, new ObservableBuffer[Assessment](), 70, creditI)
     assessments += new FinalExam(subCodeS)
     assessments += new Assignment(subCodeS)
     assessments += new Test(subCodeS)
     assessments += new Quiz(subCodeS)
-    for (a <-assessments){
-      a.saveAssessment()
-    }
   }
 
   var studentId = IntegerProperty(studentIdi)
@@ -95,81 +95,69 @@ class Subject (studentIdi: Int, subCodeS : String, subNameS : String, assessment
 
         sql"""
               select * from subject
-              where subCode = ${subCode.value}
+              where subCode = ${subCode.value} and subName = ${subName.value}
               """.map(rs => rs.string("subCode")).single.apply()
       } match {
         case Some(x) => true
         case None => false
       }
 
-      /*//check the existence of student
-      sql"""
-				select * from student where
-				firstName = ${firstName.value} and lastName = ${lastName.value}
-			""".map(rs => rs.string("firstName")).single.apply()
-    } match {
-      case Some(x) => true
-      case None => false
-    }*/
 
   }}
 
 
-  object Subject extends Database{
+  object Subject extends Database {
     def apply(studentIdi: Int,
-               subCodeS : String,
-               subNameS : String,
-               expectedmarksI:Int,
-               creditI:Int
-             ) : Subject = {
-      new Subject(studentIdi, subCodeS, subNameS, expectedmarksI, creditI)
+              subCodeS: String,
+              subNameS: String,
+              assessments: ObservableBuffer[Assessment],
+              expectedmarksI: Int,
+              creditI: Int
+             ): Subject = {
+      new Subject(studentIdi, subCodeS, subNameS, assessments, expectedmarksI, creditI)
 
 
     }
 
-    def getAllSubjects : List[Subject] = {
+    def getAllSubjects: List[Subject] = {
+
       DB readOnly { implicit session =>
-        sql"select * from subject".map(rs => Subject(rs.int("studentId"),rs.string("subCode"),
-          rs.string("subName"), rs.int("expectedmarks"), rs.int("credit"))).list.apply()
+        sql"select * from subject".map(rs => Subject(rs.int("studentId"), rs.string("subCode"),
+          rs.string("subName"), getSubjectAssessment((rs.string("subCode")), nestedAssessment), rs.int("expectedmarks"), rs.int("credit"))).list.apply()
       }
     }
-    def insertAssessmentIntoSubjects(subjects:List[Subject]) : List[Subject] = {
-        val _assessments = new ObservableBuffer[Assessment]()
-        for (subject <- subjects){
-          for (assessment <- Assessment.getAllAssessments){
-            if(assessment.subCode == subject.subCode) {
-              _assessments += assessment
+
+    def cleanAssessment(_subCode: String, _assessments: List[Assessment]): ObservableBuffer[Assessment] = {
+      var temp = new ObservableBuffer[Assessment]()
+      for (i <- _assessments.indices) {
+        if (_assessments(i).subCode.value == _subCode) {
+          temp += _assessments(i)
+        }
+      }
+      temp
+    }
+
+    def nestedAssessment: List[ObservableBuffer[Assessment]] = {
+      DB readOnly { implicit session =>
+        sql"""select subCode from subject""".map(rs => cleanAssessment(rs.string("subCode"), Assessment.getAllAssessments)).list.apply()
+      }
+    }
+
+    def getSubjectAssessment(subCode: String, _nestedAssessment: List[ObservableBuffer[Assessment]]): ObservableBuffer[Assessment] = {
+      var temp = new ObservableBuffer[Assessment]()
+      breakable{
+        for (list <- _nestedAssessment) {
+          for (assessment <- list) {
+            if (assessment.subCode.value == subCode && !temp.contains(assessment)) {
+              temp ++= list
+              break
             }
           }
-          subject.assessments = _assessments
         }
-        subjects
+      }
+      temp
     }
+
   }
 
-/*
-  def calcTotalAssessmentMarks(_assessments: ObservableBuffer[Assessment]): Double = {
-    var totalmarks = 0.0
-    for (i <- assessments) {
-      totalmarks += i.obtainedWeightage.value.toFloat
-    }
-    totalmarks
-  }*/
-
-
-/*
-  assessments += new Assessment("assessment1", 15, 85, 100)// default
-  assessments += new Assessment("assessment2", 15, 70, 100)// default
-  assessments += new Assessment("Final Exam", 50, 70, 100)
-  assessments += new Assessment("MidTerm", 20, 70, 100)
-*/
-
-/*
-  def calcTotalAssessmentMarks(_assessments: ObservableBuffer[Assessment]): Double = {
-    var totalmarks = 0.0
-    for (i <- assessments) {
-      totalmarks += i.obtainedWeightage.value.toFloat
-    }
-    totalmarks
-  }*/
 

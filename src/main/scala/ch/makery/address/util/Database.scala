@@ -1,6 +1,6 @@
 package ch.makery.address.util
 import ch.makery.address.model.{Assessment, Person, Student, Subject}
-import scalikejdbc.{AutoSession, ConnectionPool, DB}
+import scalikejdbc._
 trait Database {
   val derbyDriverClassname = "org.apache.derby.jdbc.EmbeddedDriver"
 
@@ -16,6 +16,7 @@ trait Database {
 
 object Database extends Database {
   def setupDB() = {
+    //dropTable()
     if (!hasDBInitialize) {
       Person.initializeTable()
     }
@@ -23,6 +24,17 @@ object Database extends Database {
       Student.initializeTable()
     }
 
+  }
+
+  def dropTable() = {
+    DB autoCommit { implicit session =>
+      sql"""drop table assessment
+         """.execute.apply()
+      sql"""drop table subject
+         """.execute.apply()
+      sql"""drop table student
+         """.execute.apply()
+    }
   }
 
 

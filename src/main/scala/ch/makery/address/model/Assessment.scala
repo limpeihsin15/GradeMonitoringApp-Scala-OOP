@@ -13,7 +13,7 @@ class Assessment(subCodeS: String, nameS: String, weightageI: Int, obtainedRawI:
   def this(nameS: String, weightageI: Int, obtainedRawI: Int, totalRawI: Int) = this(null, "Assessment", 0, 0, 0)
   def this(subCodeS: String) = this(subCodeS, "Assessment", 0, 0, 0)
 
-  val subCode           = new StringProperty(subCodeS)
+  var subCode           = new StringProperty(subCodeS)
   val name              = new StringProperty(nameS)
   val weightage         = ObjectProperty(weightageI)
   val obtainedRaw       = IntegerProperty(obtainedRawI)
@@ -74,11 +74,6 @@ class Assessment(subCodeS: String, nameS: String, weightageI: Int, obtainedRawI:
               where subCode = ${subCode.value} and name = ${name.value}
               """.update.apply()
 
-        /*delete assessment that inside student-subject-assessment table
-        sql"""
-              delete from student_subject_assessment
-              where subCode = ${subCode.value} and name = ${name.value}
-              """.update.apply()*/
 
       }
       ) //end of Try
@@ -98,16 +93,6 @@ class Assessment(subCodeS: String, nameS: String, weightageI: Int, obtainedRawI:
       case Some(x) => true
       case None => false
     }
-
-      /*{
-        sql"""
-              select * from student_subject_assessment
-              where subCode = ${subCode.value} and assessmentName = ${name.value}
-              """.map(rs => rs.string("subCode")).single.apply()
-      } match {
-        case Some(x) => true
-        case None => false
-      }*/
     }
   } //end of isAssessmentExist
 }
@@ -123,32 +108,11 @@ class Assessment(subCodeS: String, nameS: String, weightageI: Int, obtainedRawI:
              ): Assessment = {
       new Assessment(subCodeS, nameS, weightageI,obtainedRawI, totalRawI)
     }
-/*
-    def initializeTable() = {
-      DB autoCommit { implicit session =>
-        sql"""
-          create table assessment (
-          id int not null GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1),
-          subCode varchar(10),
-          name varchar(64),
-          weightage int,
-          totalRaw  int,
-          PRIMARY KEY (subCode, name)
-          """.execute.apply()
-      }
-    }*/
-/*
+
     def getAllAssessments : List[Assessment] = {
       DB readOnly {implicit session =>
         //
-        sql"select * from assessment".map(rs => Assessment(rs.string("subCode"),
-          rs.string("name"), rs.int("weightage"), rs.int("totalRaw"))).list.apply()
-      }
-    }
-*/
-    def getAllAssessments : List[Assessment] = {
-      DB readOnly {implicit session =>
-        //
+
         sql"select * from assessment".map(rs => Assessment(rs.string("subCode"),
           rs.string("name"), rs.int("weightage"), rs.int("obtainedRaw"),rs.int("totalRaw"))).list.apply()
       }

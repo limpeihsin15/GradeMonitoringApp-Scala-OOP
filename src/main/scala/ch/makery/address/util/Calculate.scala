@@ -11,26 +11,31 @@ object Calculate {
 
   def calcTotalAssessments(subject:Subject): Double = {
     subject.currentmarks = 0.0
-    for (i <- subject.assessments) {
+    if(subject.assessments != null) {
+      for (i <- subject.assessments) {
 
-      subject.currentmarks += i.obtainedWeightage.value.toFloat
+        subject.currentmarks += i.obtainedWeightage.value.toFloat
+      }
+
+      subject.currentmarks = roundAt2(subject.currentmarks)
+
     }
-
-    subject.currentmarks = roundAt2(subject.currentmarks)
     subject.currentmarks
   }
   //##
   def calcCGPA(student: Student): Double = {
     var _accumulatedmarks = 0.0
     var totalcredit = 0
-    for (i <- student.subject) {
-      Calculate.calcTotalAssessments(i)
-      _accumulatedmarks += i.currentmarks *i.credit.value
-      //println(_accumulatedmarks)
-      totalcredit += i.credit.value
-      //println(totalcredit)
+    if(student.subject != null){
+      for (i <- student.subject) {
+        Calculate.calcTotalAssessments(i)
+        _accumulatedmarks += i.currentmarks *i.credit.value
+        //println(_accumulatedmarks)
+        totalcredit += i.credit.value
+        //println(totalcredit)
+      }
+      student.cgpa = roundAt2(_accumulatedmarks / totalcredit)
     }
-    student.cgpa = roundAt2(_accumulatedmarks / totalcredit)
     student.cgpa
   }
 }
